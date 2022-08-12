@@ -26,15 +26,25 @@ func TestOps(t *testing.T) {
 	}
 	t.Logf("v2 = %#v", v2)
 
-	v3, err := Add(v1, v2)
+	v3, err := New(4, 10, 11, 12, 13)
 	if err != nil {
-		t.Fatalf("Add() failed with: %s", err)
+		t.Fatalf("New() failed with: %s", err)
 	}
 	t.Logf("v3 = %#v", v3)
 
-	v4, err := Mul(v1, v2)
+	//r1, err := Add(v1)
+	//r1, err := Add(v1, v2)
+	r1, err := Add(v1, v2, v3)
 	if err != nil {
 		t.Fatalf("Add() failed with: %s", err)
 	}
-	t.Logf("v4 = %#v", v4)
+	t.Logf("r1 = %#v", r1)
+
+	//r2, err := Mul(v1)
+	//r2, err := Mul(v1, v2)
+	r2, err := Mul(v1, v2, v3)
+	if err != nil {
+		t.Fatalf("Add() failed with: %s", err)
+	}
+	t.Logf("r4 = %#v", r2)
 }
