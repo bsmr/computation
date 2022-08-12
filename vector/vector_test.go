@@ -35,7 +35,7 @@ func TestOps(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Add() failed with: %s", err)
 	}
-	t.Logf("r4 = %#v", r2)
+	t.Logf("r2 = %#v", r2)
 }
 
 func TestSpecialCase(t *testing.T) {
@@ -49,5 +49,5 @@ func TestSpecialCase(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Add() failed with: %s", err)
 	}
-	t.Logf("r4 = %#v", r2)
+	t.Logf("r2 = %#v", r2)
 }
