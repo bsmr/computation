@@ -1,6 +1,10 @@
 package vector
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/bsmr/computation"
+)
 
 type Vector[T any] struct {
 	rank   int
@@ -33,4 +37,33 @@ func (v *Vector[T]) At(index int) (T, error) {
 	}
 
 	return v.values[index], nil
+}
+
+func Add[T computation.Numeric](vs ...*Vector[T]) (*Vector[T], error) {
+	return operation(func(a, b T) T { return a + b }, vs...)
+}
+
+func Mul[T computation.Numeric](vs ...*Vector[T]) (*Vector[T], error) {
+	return operation(func(a, b T) T { return a * b }, vs...)
+}
+
+func operation[T computation.Numeric](op func(a, b T) T, vs ...*Vector[T]) (*Vector[T], error) {
+	var vr *Vector[T]
+	var err error
+
+	for index, v := range vs {
+		switch index {
+		case 0:
+			vr, err = New(v.rank, v.values...)
+			if err != nil {
+				return nil, err
+			}
+		default:
+			for i := 0; i < vr.rank; i++ {
+				vr.values[i] = op(vr.values[i], v.values[i])
+			}
+		}
+	}
+
+	return vr, nil
 }
