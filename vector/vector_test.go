@@ -37,3 +37,17 @@ func TestOps(t *testing.T) {
 	}
 	t.Logf("r4 = %#v", r2)
 }
+
+func TestSpecialCase(t *testing.T) {
+	r1, err := Add[int]()
+	if err != nil {
+		t.Fatalf("Add() failed with: %s", err)
+	}
+	t.Logf("r1 = %#v", r1)
+
+	r2, err := Mul[int]()
+	if err != nil {
+		t.Fatalf("Add() failed with: %s", err)
+	}
+	t.Logf("r4 = %#v", r2)
+}
