@@ -18,10 +18,11 @@ func New[T any](rank int, values ...T) (*Vector[T], error) {
 	}
 
 	vector := &Vector[T]{
-		rank: rank,
+		rank:   rank,
+		values: make([]T, rank),
 	}
 
-	copy(values, vector.values)
+	copy(vector.values, values)
 
 	return vector, nil
 }
