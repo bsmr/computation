@@ -1,6 +1,9 @@
 package container
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func TestString(t *testing.T) {
 	c1, _ := New(3, 2, 1, 2, 3, 4, 5, 6)
@@ -88,8 +91,30 @@ func TestMatrixMatrixMultiplication(t *testing.T) {
 	}
 }
 
-func matrix3x4[T int]() (*Container[T], error) {
-	return New[T](3, 4, 11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34)
+var (
+	m3x4vs = []int{11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34}
+)
+
+func matrix3x4() (*Container[int], error) {
+	return New(3, 4, m3x4vs...)
+}
+
+func TestValues(t *testing.T) {
+	m1, err := matrix3x4()
+	if err != nil {
+		t.Fatalf("matrix3x4() failed with: %s", err)
+	}
+	t.Logf("m1: %s", m1)
+
+	vs, err := m1.Values()
+	if err != nil {
+		t.Fatalf("Values() failed with: %s", err)
+	}
+	t.Logf("vs: %#v", vs)
+
+	if !reflect.DeepEqual(vs, m3x4vs) {
+		t.Fatalf("Values() is %#v, expected %#v", vs, m3x4vs)
+	}
 }
 
 func TestColumn(t *testing.T) {
@@ -99,7 +124,8 @@ func TestColumn(t *testing.T) {
 	}
 	t.Logf("m1: %s", m1)
 
-	cr, err := New(3, 1, 13, 23, 33)
+	ce := []int{13, 23, 33}
+	cr, err := New(3, 1, ce...)
 	if err != nil {
 		t.Fatalf("New() failed with: %s", err)
 	}
@@ -114,6 +140,15 @@ func TestColumn(t *testing.T) {
 	if !ci.Equal(cr) {
 		t.Fatalf("Column(%d) is %s, expected %s", col+1, ci, cr)
 	}
+
+	vr, err := ci.Values()
+	if err != nil {
+		t.Fatalf("ci.Values() failed with: %s", err)
+	}
+
+	if !reflect.DeepEqual(vr, ce) {
+		t.Fatalf("Values() is %#v, expected %#v", vr, ce)
+	}
 }
 
 func TestRow(t *testing.T) {
@@ -123,7 +158,8 @@ func TestRow(t *testing.T) {
 	}
 	t.Logf("m1: %s", m1)
 
-	rr, err := New(1, 4, 21, 22, 23, 24)
+	re := []int{21, 22, 23, 24}
+	rr, err := New(1, 4, re...)
 	if err != nil {
 		t.Fatalf("New() failed with: %s", err)
 	}
@@ -137,5 +173,14 @@ func TestRow(t *testing.T) {
 
 	if !ri.Equal(rr) {
 		t.Fatalf("Row(%d) is %s, expected %s", row+1, ri, rr)
+	}
+
+	xr, err := ri.Values()
+	if err != nil {
+		t.Fatalf("ri.Values() failed with: %s", err)
+	}
+
+	if !reflect.DeepEqual(xr, re) {
+		t.Fatalf("Values() is %#v, expected %#v", xr, re)
 	}
 }

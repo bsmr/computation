@@ -175,6 +175,22 @@ func (c *Container[T]) Row(i int) (*Container[T], error) {
 	return r, nil
 }
 
+func (c *Container[T]) Values() ([]T, error) {
+	vs := []T{}
+	m, n := c.Rank()
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			v, err := c.At(i, j)
+			if err != nil {
+				return nil, err
+			}
+			vs = append(vs, v)
+		}
+	}
+
+	return vs, nil
+}
+
 func Transposition[T computation.Numeric](a *Container[T]) (*Container[T], error) {
 	c, err := New[T](a.n, a.m)
 	if err != nil {
