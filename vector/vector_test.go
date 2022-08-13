@@ -1,6 +1,7 @@
 package vector
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/bsmr/computation/internal/container"
@@ -54,7 +55,8 @@ func TestAddition(t *testing.T) {
 	if err != nil {
 		t.Fatalf("v2.New() failed with: %s", err)
 	}
-	vr, err := New(7, 9, 11, 13)
+	rs := []int{7, 9, 11, 13}
+	vr, err := New(rs...)
 	if err != nil {
 		t.Fatalf("vr.New() failed with: %s", err)
 	}
@@ -70,6 +72,14 @@ func TestAddition(t *testing.T) {
 
 	if !v3.Equal(vr) {
 		t.Fatalf("v3 is %s, expected %s", v3, vr)
+	}
+
+	vs, err := v3.Values()
+	if err != nil {
+		t.Fatalf("Values() failed with: %s", err)
+	}
+	if !reflect.DeepEqual(vs, rs) {
+		t.Fatalf("Values() is %#v, expected %#v", vs, rs)
 	}
 }
 
@@ -98,6 +108,14 @@ func TestTransposition(t *testing.T) {
 	}
 	if v3.EqualReal(v1) {
 		t.Fatalf("v3 and v3 should not be equal")
+	}
+
+	vs, err := v3.Values()
+	if err != nil {
+		t.Fatalf("Values() failed with: %s", err)
+	}
+	if !reflect.DeepEqual(vs, vals) {
+		t.Fatalf("Values() is %#v, expected %#v", vs, vals)
 	}
 }
 

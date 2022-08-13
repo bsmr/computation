@@ -89,6 +89,25 @@ func (v *Vector[T]) EqualReal(a *Vector[T]) bool {
 	return v.Equal(a)
 }
 
+func (v *Vector[T]) Values() ([]T, error) {
+	switch v.layout {
+	case orientation.MxOne:
+		c, err := v.data.Column(0)
+		if err != nil {
+			return nil, err
+		}
+		return c.Values()
+	case orientation.OnexN:
+		r, err := v.data.Row(0)
+		if err != nil {
+			return nil, err
+		}
+		return r.Values()
+	default:
+		return nil, fmt.Errorf("Values() not supported for %s", v.layout)
+	}
+}
+
 func Addition[T computation.Numeric](a, b *Vector[T]) (*Vector[T], error) {
 	c, err := container.Addition(a.data, b.data)
 	if err != nil {
