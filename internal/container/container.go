@@ -123,6 +123,58 @@ func (c *Container[T]) Equal(x *Container[T]) bool {
 	return true
 }
 
+func (c *Container[T]) Column(j int) (*Container[T], error) {
+	m, n := c.Rank()
+
+	if !between(0, j, n) {
+		return nil, fmt.Errorf("j is %v, but should be between [0,%v[", j, n)
+	}
+
+	r, err := New[T](m, 1)
+	if err != nil {
+		return nil, err
+	}
+
+	for i := 0; i < m; i++ {
+		v, err := c.At(i, j)
+		if err != nil {
+			return nil, err
+		}
+		_, err = r.SetAt(i, 0, v)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return r, nil
+}
+
+func (c *Container[T]) Row(i int) (*Container[T], error) {
+	m, n := c.Rank()
+
+	if !between(0, i, m) {
+		return nil, fmt.Errorf("i is %v, but should be between [0,%v[", i, m)
+	}
+
+	r, err := New[T](1, n)
+	if err != nil {
+		return nil, err
+	}
+
+	for j := 0; j < n; j++ {
+		v, err := c.At(i, j)
+		if err != nil {
+			return nil, err
+		}
+		_, err = r.SetAt(0, j, v)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return r, nil
+}
+
 func Transposition[T computation.Numeric](a *Container[T]) (*Container[T], error) {
 	c, err := New[T](a.n, a.m)
 	if err != nil {

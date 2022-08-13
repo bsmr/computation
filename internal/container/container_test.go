@@ -87,3 +87,55 @@ func TestMatrixMatrixMultiplication(t *testing.T) {
 		t.Fatal("m3 and mr are not equal")
 	}
 }
+
+func matrix3x4[T int]() (*Container[T], error) {
+	return New[T](3, 4, 11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34)
+}
+
+func TestColumn(t *testing.T) {
+	m1, err := matrix3x4()
+	if err != nil {
+		t.Fatalf("matrix3x4() failed with: %s", err)
+	}
+	t.Logf("m1: %s", m1)
+
+	cr, err := New(3, 1, 13, 23, 33)
+	if err != nil {
+		t.Fatalf("New() failed with: %s", err)
+	}
+
+	col := 2
+	ci, err := m1.Column(col)
+	if err != nil {
+		t.Fatalf("Column(%d) failed with: %s", col+1, err)
+	}
+	t.Logf("Column(%d): %s", col+1, ci)
+
+	if !ci.Equal(cr) {
+		t.Fatalf("Column(%d) is %s, expected %s", col+1, ci, cr)
+	}
+}
+
+func TestRow(t *testing.T) {
+	m1, err := matrix3x4()
+	if err != nil {
+		t.Fatalf("matrix3x4() failed with: %s", err)
+	}
+	t.Logf("m1: %s", m1)
+
+	rr, err := New(1, 4, 21, 22, 23, 24)
+	if err != nil {
+		t.Fatalf("New() failed with: %s", err)
+	}
+
+	row := 1
+	ri, err := m1.Row(row)
+	if err != nil {
+		t.Fatalf("Row(%d) failed with: %s", row+1, err)
+	}
+	t.Logf("Row(%d): %s", row+1, ri)
+
+	if !ri.Equal(rr) {
+		t.Fatalf("Row(%d) is %s, expected %s", row+1, ri, rr)
+	}
+}
