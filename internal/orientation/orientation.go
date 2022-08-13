@@ -56,6 +56,10 @@ func Parse(s string) Orientation {
 }
 
 func Check[T computation.Numeric](c *container.Container[T]) Orientation {
+	if c == nil {
+		return Unknown
+	}
+
 	m, n := c.Rank()
 	switch {
 	case m == 1 && n == 1:

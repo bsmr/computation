@@ -1,6 +1,10 @@
 package orientation
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/bsmr/computation/internal/container"
+)
 
 func TestString(t *testing.T) {
 	for _, v := range []struct {
@@ -37,4 +41,45 @@ func TestParse(t *testing.T) {
 			t.Errorf("Parse(%q) is %s, expected %s", v.o, o, v.s)
 		}
 	}
+}
+
+func TestCheck(t *testing.T) {
+	for _, v := range []struct {
+		o Orientation
+		c *container.Container[int]
+	}{
+		{
+			o: OnexOne,
+			c: func() *container.Container[int] { c, _ := container.New[int](1, 1); return c }(),
+		},
+		{
+			o: MxOne,
+			c: func() *container.Container[int] { c, _ := container.New[int](4, 1); return c }(),
+		},
+		{
+			o: OnexN,
+			c: func() *container.Container[int] { c, _ := container.New[int](1, 4); return c }(),
+		},
+		{
+			o: MxN,
+			c: func() *container.Container[int] { c, _ := container.New[int](3, 4); return c }(),
+		},
+		{
+			o: Unknown,
+			c: func() *container.Container[int] { c, _ := container.New[int](0, 0); return c }(),
+		},
+		{
+			o: Unknown,
+			c: func() *container.Container[int] { c, _ := container.New[int](5, 0); return c }(),
+		},
+		{
+			o: Unknown,
+			c: func() *container.Container[int] { c, _ := container.New[int](0, 5); return c }(),
+		},
+	} {
+		if o := Check(v.c); o != v.o {
+			t.Errorf("Check(%s) is %s, expected %s", v.c, o, v.o)
+		}
+	}
+
 }
