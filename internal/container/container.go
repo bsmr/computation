@@ -93,16 +93,16 @@ func (c *Container[T]) Copy() (*Container[T], error) {
 func (c *Container[T]) String() string {
 	var sb strings.Builder
 
-	sb.WriteString(fmt.Sprintf("<%dx%d>\n", c.m, c.n))
+	sb.WriteString(fmt.Sprintf("\n<%dx%d>\n", c.m, c.n))
 
 	for i := 0; i < c.m; i++ {
 		sb.WriteString("[")
 		for j := 0; j < c.n; j++ {
 			if j != 0 {
-				sb.WriteString(" ")
+				sb.WriteString("  ")
 			}
 			v, _ := c.At(i, j)
-			sb.WriteString(fmt.Sprintf("%d,%d: %v", i+1, j+1, v))
+			sb.WriteString(fmt.Sprintf("<(%d,%d):%v>", i+1, j+1, v))
 		}
 		sb.WriteString("]\n")
 	}
