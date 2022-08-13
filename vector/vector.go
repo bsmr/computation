@@ -25,16 +25,39 @@ func New[T computation.Numeric](values ...T) (*Vector[T], error) {
 }
 
 func (v *Vector[T]) At(index int) (T, error) {
-	return v.data.At(index, 1)
+	switch v.layout {
+	case orientation.MxOne:
+		return v.data.At(index, 1)
+	case orientation.OnexN:
+		return v.data.At(1, index)
+	default:
+		var dummy T
+		return dummy, fmt.Errorf("cannot handle layout %s", v.layout)
+	}
 }
 
 func (v *Vector[T]) SetAt(index int, newValue T) (T, error) {
-	return v.data.SetAt(index, 1, newValue)
+	switch v.layout {
+	case orientation.MxOne:
+		return v.data.SetAt(index, 1, newValue)
+	case orientation.OnexN:
+		return v.data.SetAt(1, index, newValue)
+	default:
+		var dummy T
+		return dummy, fmt.Errorf("cannot handle layout %s", v.layout)
+	}
 }
 
 func (v *Vector[T]) Rank() int {
-	m, _ := v.data.Rank()
-	return m
+	m, n := v.data.Rank()
+	switch v.layout {
+	case orientation.MxOne:
+		return m
+	case orientation.OnexN:
+		return n
+	default:
+		return -1
+	}
 }
 
 func (v *Vector[T]) String() string {
