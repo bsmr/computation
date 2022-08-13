@@ -24,6 +24,19 @@ func New[T computation.Numeric](values ...T) (*Vector[T], error) {
 	}, err
 }
 
+func NewZero[T computation.Numeric](rank int) (*Vector[T], error) {
+	slice := make([]T, rank)
+	return New(slice...)
+}
+
+func NewValue[T computation.Numeric](rank int, value T) (*Vector[T], error) {
+	slice := make([]T, rank)
+	for p := 0; p < rank; p++ {
+		slice[p] = value
+	}
+	return New(slice...)
+}
+
 func (v *Vector[T]) At(index int) (T, error) {
 	switch v.layout {
 	case orientation.MxOne:

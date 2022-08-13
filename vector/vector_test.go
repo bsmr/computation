@@ -169,3 +169,49 @@ func TestEqual(t *testing.T) {
 		t.Errorf("v1 and v3 are not equal")
 	}
 }
+
+func TestNewXXX(t *testing.T) {
+	for i, m := range []struct {
+		fn func() (*Vector[int], error)
+		vs []int
+	}{
+		{
+			fn: func() (*Vector[int], error) { return NewZero[int](2) },
+			vs: []int{0, 0},
+		},
+		{
+			fn: func() (*Vector[int], error) { return NewZero[int](3) },
+			vs: []int{0, 0, 0},
+		},
+		{
+			fn: func() (*Vector[int], error) { return NewZero[int](4) },
+			vs: []int{0, 0, 0, 0},
+		},
+		{
+			fn: func() (*Vector[int], error) { return NewValue(2, 2) },
+			vs: []int{2, 2},
+		},
+		{
+			fn: func() (*Vector[int], error) { return NewValue(3, 3) },
+			vs: []int{3, 3, 3},
+		},
+		{
+			fn: func() (*Vector[int], error) { return NewValue(4, 4) },
+			vs: []int{4, 4, 4, 4},
+		},
+	} {
+		v, err := m.fn()
+		if err != nil {
+			t.Errorf("[%d] NewXXX() failed with: %s", i, err)
+			continue
+		}
+		vs, err := v.Values()
+		if err != nil {
+			t.Errorf("[%d] Values() failed with: %s", i, err)
+			continue
+		}
+		if !reflect.DeepEqual(vs, m.vs) {
+			t.Errorf("[%d] Values() is %#v, expected %#v", i, vs, m.vs)
+		}
+	}
+}
