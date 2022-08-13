@@ -45,7 +45,7 @@ func (v *Vector[T]) String() string {
 }
 
 func Addition[T computation.Numeric](a, b *Vector[T]) (*Vector[T], error) {
-	c, err := container.Add(a.data, b.data)
+	c, err := container.Addition(a.data, b.data)
 	if err != nil {
 		return nil, err
 	}

@@ -43,17 +43,3 @@ func TestOps(t *testing.T) {
 	}
 	t.Logf("r2 = %s", r2)
 }
-
-func TestSpecialCase(t *testing.T) {
-	r1, err := container.Add[int]()
-	if err != nil {
-		t.Fatalf("Add() failed with: %s", err)
-	}
-	t.Logf("r1 = %s", r1)
-
-	r2, err := container.Mul[int]()
-	if err != nil {
-		t.Fatalf("Add() failed with: %s", err)
-	}
-	t.Logf("r2 = %s", r2)
-}
