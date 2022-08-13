@@ -11,7 +11,15 @@ type Vector[T any] struct {
 	values []T
 }
 
+const (
+	minRank = 1
+)
+
 func New[T any](rank int, values ...T) (*Vector[T], error) {
+	if rank < minRank {
+		return nil, fmt.Errorf("rank must be %d or higher", minRank)
+	}
+
 	lv := len(values)
 	if rank < lv {
 		return nil, fmt.Errorf("too many values %d for rank %d", lv, rank)
@@ -53,6 +61,10 @@ func operation[T computation.Numeric](op func(a, b T) T, vs ...*Vector[T]) (*Vec
 	var err error
 
 	for index, v := range vs {
+		if v == nil {
+			return nil, fmt.Errorf("vector %d is nil", index)
+		}
+
 		switch index {
 		case 0:
 			vr, err = New(v.rank, v.values...)

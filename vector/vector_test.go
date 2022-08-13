@@ -1,6 +1,10 @@
 package vector
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/bsmr/computation"
+)
 
 func TestOps(t *testing.T) {
 	v1, err := New(4, 2, 3, 4, 5)
@@ -50,4 +54,80 @@ func TestSpecialCase(t *testing.T) {
 		t.Fatalf("Add() failed with: %s", err)
 	}
 	t.Logf("r2 = %#v", r2)
+}
+
+func bad[T computation.Numeric]() *Vector[T] {
+	v := &Vector[T]{
+		rank:   1,
+		values: []T{1, 2, 3},
+	}
+	return v
+}
+
+func TestErrors(t *testing.T) {
+	if _, err := New(0, 1); err == nil {
+		t.Fatal("New(0, 1) did not return an error")
+	}
+
+	if _, err := Add(bad[int]()); err == nil {
+		t.Fatal("Add() did not generate an error")
+	}
+
+	for _, c := range [][]*Vector[int]{
+		{nil},
+		{nil, nil},
+		{
+			&Vector[int]{
+				rank:   1,
+				values: []int{1, 2},
+			},
+			nil,
+		},
+		{
+			nil,
+			&Vector[int]{
+				rank:   1,
+				values: []int{3, 4},
+			},
+		},
+		{
+			&Vector[int]{
+				rank:   1,
+				values: []int{1, 2},
+			},
+			nil,
+			&Vector[int]{
+				rank:   1,
+				values: []int{3, 4},
+			},
+		},
+	} {
+		if _, err := Add(c...); err == nil {
+			t.Fatalf("Add(%#v) did not generate an error", c)
+		}
+	}
+}
+
+func TestAt(t *testing.T) {
+	v0, _ := New(3, 1, 2, 3)
+
+	for i, c := range v0.values {
+		v, err := v0.At(i)
+		if err != nil {
+			t.Errorf("%#v.At(%d) failed with: %s", v0, i, err)
+		}
+		if v != c {
+			t.Errorf("%#v.At(%d) is %d, expected %d", v0, i, v, c)
+		}
+	}
+
+	for _, c := range []int{
+		-1,
+		3,
+		4,
+	} {
+		if _, err := v0.At(c); err == nil {
+			t.Fatalf("%#v.At(%d) did not return an errror", v0, c)
+		}
+	}
 }
