@@ -1,8 +1,6 @@
-package common
+package container
 
-import (
-	"testing"
-)
+import "testing"
 
 func TestString(t *testing.T) {
 	c1, _ := New(3, 2, 1, 2, 3, 4, 5, 6)

@@ -3,7 +3,7 @@ package vector
 import (
 	"testing"
 
-	"github.com/bsmr/computation/internal/common"
+	"github.com/bsmr/computation/internal/container"
 )
 
 func TestOps(t *testing.T) {
@@ -36,7 +36,7 @@ func TestOps(t *testing.T) {
 	//r2, err := Mul(v1)
 	m2, _ := Transposition(v2)
 	t.Logf("m2 = %s", m2)
-	r2, err := common.MatrixMatrixMultiplication(v1.data, m2.data)
+	r2, err := container.MatrixMatrixMultiplication(v1.data, m2.data)
 	//r2, err := common.Mul[int](v1, v2, v3)
 	if err != nil {
 		t.Fatalf("Add() failed with: %s", err)
@@ -45,13 +45,13 @@ func TestOps(t *testing.T) {
 }
 
 func TestSpecialCase(t *testing.T) {
-	r1, err := common.Add[int]()
+	r1, err := container.Add[int]()
 	if err != nil {
 		t.Fatalf("Add() failed with: %s", err)
 	}
 	t.Logf("r1 = %s", r1)
 
-	r2, err := common.Mul[int]()
+	r2, err := container.Mul[int]()
 	if err != nil {
 		t.Fatalf("Add() failed with: %s", err)
 	}

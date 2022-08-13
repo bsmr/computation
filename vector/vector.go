@@ -5,18 +5,18 @@ import (
 	"strings"
 
 	"github.com/bsmr/computation"
-	"github.com/bsmr/computation/internal/common"
+	"github.com/bsmr/computation/internal/container"
 	"github.com/bsmr/computation/internal/orientation"
 )
 
 type Vector[T computation.Numeric] struct {
-	data   *common.Container[T]
+	data   *container.Container[T]
 	layout orientation.Orientation
 }
 
 func New[T computation.Numeric](values ...T) (*Vector[T], error) {
 	rank := len(values)
-	data, err := common.New(rank, 1, values...)
+	data, err := container.New(rank, 1, values...)
 
 	return &Vector[T]{
 		data:   data,
@@ -45,7 +45,7 @@ func (v *Vector[T]) String() string {
 }
 
 func Addition[T computation.Numeric](a, b *Vector[T]) (*Vector[T], error) {
-	c, err := common.Add(a.data, b.data)
+	c, err := container.Add(a.data, b.data)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func Addition[T computation.Numeric](a, b *Vector[T]) (*Vector[T], error) {
 }
 
 func Transposition[T computation.Numeric](a *Vector[T]) (*Vector[T], error) {
-	c, err := common.Transposition(a.data)
+	c, err := container.Transposition(a.data)
 	if err != nil {
 		return nil, err
 	}

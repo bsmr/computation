@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/bsmr/computation"
-	"github.com/bsmr/computation/internal/common"
+	"github.com/bsmr/computation/internal/container"
 )
 
 type Orientation int
@@ -55,7 +55,7 @@ func Parse(s string) Orientation {
 	}
 }
 
-func Check[T computation.Numeric](c *common.Container[T]) Orientation {
+func Check[T computation.Numeric](c *container.Container[T]) Orientation {
 	m, n := c.Rank()
 	switch {
 	case m == 1 && n == 1:
