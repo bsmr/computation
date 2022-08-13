@@ -1,6 +1,9 @@
 package vector
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/bsmr/computation"
 	"github.com/bsmr/computation/internal/common"
 	"github.com/bsmr/computation/internal/orientation"
@@ -11,7 +14,8 @@ type Vector[T computation.Numeric] struct {
 	layout orientation.Orientation
 }
 
-func New[T computation.Numeric](rank int, values ...T) (*Vector[T], error) {
+func New[T computation.Numeric](values ...T) (*Vector[T], error) {
+	rank := len(values)
 	data, err := common.New(rank, 1, values...)
 
 	return &Vector[T]{
@@ -34,7 +38,10 @@ func (v *Vector[T]) Rank() int {
 }
 
 func (v *Vector[T]) String() string {
-	return v.data.String()
+	var sb strings.Builder
+	sb.WriteString(v.data.String())
+	sb.WriteString(fmt.Sprintf("mode: %s", v.layout))
+	return sb.String()
 }
 
 func Addition[T computation.Numeric](a, b *Vector[T]) (*Vector[T], error) {

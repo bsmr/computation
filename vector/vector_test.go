@@ -7,19 +7,19 @@ import (
 )
 
 func TestOps(t *testing.T) {
-	v1, err := New(4, 2, 3, 4, 5)
+	v1, err := New(2, 3, 4, 5)
 	if err != nil {
 		t.Fatalf("New() failed with: %s", err)
 	}
 	t.Logf("v1 = %s", v1)
 
-	v2, err := New(4, 6, 7, 8, 9)
+	v2, err := New(6, 7, 8, 9)
 	if err != nil {
 		t.Fatalf("New() failed with: %s", err)
 	}
 	t.Logf("v2 = %s", v2)
 
-	v3, err := New(4, 10, 11, 12, 13)
+	v3, err := New(10, 11, 12, 13)
 	if err != nil {
 		t.Fatalf("New() failed with: %s", err)
 	}
