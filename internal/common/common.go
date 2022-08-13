@@ -28,7 +28,7 @@ func Operation[T computation.Numeric](op func(a, b T) T, containers ...Container
 
 	for index, v := range containers {
 		if v == nil {
-			return nil, fmt.Errorf("vector %d is nil", index)
+			return nil, fmt.Errorf("Container %d is nil", index)
 		}
 
 		switch index {
