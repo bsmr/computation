@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/bsmr/computation"
+	"github.com/bsmr/computation/internal/common"
 )
 
 func TestOps(t *testing.T) {
@@ -27,7 +28,7 @@ func TestOps(t *testing.T) {
 
 	//r1, err := Add(v1)
 	//r1, err := Add(v1, v2)
-	r1, err := Add(v1, v2, v3)
+	r1, err := common.Add[int](v1, v2, v3)
 	if err != nil {
 		t.Fatalf("Add() failed with: %s", err)
 	}
@@ -35,7 +36,7 @@ func TestOps(t *testing.T) {
 
 	//r2, err := Mul(v1)
 	//r2, err := Mul(v1, v2)
-	r2, err := Mul(v1, v2, v3)
+	r2, err := common.Mul[int](v1, v2, v3)
 	if err != nil {
 		t.Fatalf("Add() failed with: %s", err)
 	}
@@ -43,13 +44,13 @@ func TestOps(t *testing.T) {
 }
 
 func TestSpecialCase(t *testing.T) {
-	r1, err := Add[int]()
+	r1, err := common.Add[int]()
 	if err != nil {
 		t.Fatalf("Add() failed with: %s", err)
 	}
 	t.Logf("r1 = %#v", r1)
 
-	r2, err := Mul[int]()
+	r2, err := common.Mul[int]()
 	if err != nil {
 		t.Fatalf("Add() failed with: %s", err)
 	}
@@ -69,11 +70,11 @@ func TestErrors(t *testing.T) {
 		t.Fatal("New(0, 1) did not return an error")
 	}
 
-	if _, err := Add(bad[int]()); err == nil {
+	if _, err := common.Add[int](bad[int]()); err == nil {
 		t.Fatal("Add() did not generate an error")
 	}
 
-	for _, c := range [][]*Vector[int]{
+	for _, c := range [][]common.Container[int]{
 		{nil},
 		{nil, nil},
 		{
@@ -102,7 +103,7 @@ func TestErrors(t *testing.T) {
 			},
 		},
 	} {
-		if _, err := Add(c...); err == nil {
+		if _, err := common.Add(c...); err == nil {
 			t.Fatalf("Add(%#v) did not generate an error", c)
 		}
 	}
@@ -128,6 +129,51 @@ func TestAt(t *testing.T) {
 	} {
 		if _, err := v0.At(c); err == nil {
 			t.Fatalf("%#v.At(%d) did not return an errror", v0, c)
+		}
+	}
+}
+
+func TestContainerCompatibility(t *testing.T) {
+	v1, _ := New(3, 1, 2, 3)
+	v2, _ := New(3, 4, 5, 6)
+
+	cs := []common.Container[int]{
+		v1,
+		v2,
+	}
+
+	for _, c := range cs {
+		t.Logf("Rank(): %d", c.Rank())
+	}
+}
+
+func equal(as, bs []int) bool {
+	if len(as) != len(bs) {
+		return false
+	}
+	for i, v := range as {
+		if v != bs[i] {
+			return false
+		}
+	}
+
+	return true
+}
+
+func TestValues(t *testing.T) {
+	for _, vs := range [][]int{
+		{1},
+		{1, 2},
+		{1, 2, 3},
+		{1, 2, 3, 4},
+	} {
+		v, err := New(len(vs), vs...)
+		if err != nil {
+			t.Errorf("New(%d,%#v) failed with: %s", len(vs), vs, err)
+			continue
+		}
+		if rs := v.Values(); !equal(rs, vs) {
+			t.Errorf("Values() is %#v, expected %#v", rs, vs)
 		}
 	}
 }

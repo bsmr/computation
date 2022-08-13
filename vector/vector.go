@@ -4,9 +4,10 @@ import (
 	"fmt"
 
 	"github.com/bsmr/computation"
+	"github.com/bsmr/computation/internal/common"
 )
 
-type Vector[T any] struct {
+type Vector[T computation.Numeric] struct {
 	rank   int
 	values []T
 }
@@ -15,7 +16,7 @@ const (
 	minRank = 1
 )
 
-func New[T any](rank int, values ...T) (*Vector[T], error) {
+func New[T computation.Numeric](rank int, values ...T) (*Vector[T], error) {
 	if rank < minRank {
 		return nil, fmt.Errorf("rank must be %d or higher", minRank)
 	}
@@ -48,35 +49,19 @@ func (v *Vector[T]) At(index int) (T, error) {
 	return v.values[index], nil
 }
 
-func Add[T computation.Numeric](vs ...*Vector[T]) (*Vector[T], error) {
-	return operation(func(a, b T) T { return a + b }, vs...)
+func (v *Vector[T]) SetAt(index int, newValue T) (oldValue T, err error) {
+	v.values[index], oldValue = newValue, v.values[index]
+	return
 }
 
-func Mul[T computation.Numeric](vs ...*Vector[T]) (*Vector[T], error) {
-	return operation(func(a, b T) T { return a * b }, vs...)
+func (v *Vector[T]) Copy() (common.Container[T], error) {
+	return New(v.rank, v.values...)
 }
 
-func operation[T computation.Numeric](op func(a, b T) T, vs ...*Vector[T]) (*Vector[T], error) {
-	var vr *Vector[T]
-	var err error
+func (v *Vector[T]) Rank() int {
+	return v.rank
+}
 
-	for index, v := range vs {
-		if v == nil {
-			return nil, fmt.Errorf("vector %d is nil", index)
-		}
-
-		switch index {
-		case 0:
-			vr, err = New(v.rank, v.values...)
-			if err != nil {
-				return nil, err
-			}
-		default:
-			for i := 0; i < vr.rank; i++ {
-				vr.values[i] = op(vr.values[i], v.values[i])
-			}
-		}
-	}
-
-	return vr, nil
+func (v *Vector[T]) Values() []T {
+	return v.values
 }
