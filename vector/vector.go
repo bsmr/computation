@@ -15,10 +15,15 @@ type Vector[T computation.Numeric] struct {
 	layout orientation.Orientation
 }
 
-// New() creates a new value. The rank is specified by the number of values passed in.
+// New() creates a new vector.
+// The rank is specified by the number of values passed in.
 func New[T computation.Numeric](values ...T) (*Vector[T], error) {
 	rank := len(values)
 	data, err := container.New(rank, 1, values...)
+
+	if err != nil {
+		return nil, err
+	}
 
 	return &Vector[T]{
 		data:   data,
