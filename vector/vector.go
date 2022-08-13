@@ -9,11 +9,13 @@ import (
 	"github.com/bsmr/computation/internal/orientation"
 )
 
+// Vector handles numerical vectors.
 type Vector[T computation.Numeric] struct {
 	data   *container.Container[T]
 	layout orientation.Orientation
 }
 
+// New() creates a new value. The rank is specified by the number of values passed in.
 func New[T computation.Numeric](values ...T) (*Vector[T], error) {
 	rank := len(values)
 	data, err := container.New(rank, 1, values...)
@@ -24,11 +26,13 @@ func New[T computation.Numeric](values ...T) (*Vector[T], error) {
 	}, err
 }
 
+// NewValue() creates a new vector of rank with all values set to zero.
 func NewZero[T computation.Numeric](rank int) (*Vector[T], error) {
 	slice := make([]T, rank)
 	return New(slice...)
 }
 
+// NewValue() creates a new vector of rank with all values set to value.
 func NewValue[T computation.Numeric](rank int, value T) (*Vector[T], error) {
 	slice := make([]T, rank)
 	for p := 0; p < rank; p++ {
@@ -37,6 +41,7 @@ func NewValue[T computation.Numeric](rank int, value T) (*Vector[T], error) {
 	return New(slice...)
 }
 
+// At() returns the value at index.
 func (v *Vector[T]) At(index int) (T, error) {
 	switch v.layout {
 	case orientation.MxOne:
@@ -49,6 +54,7 @@ func (v *Vector[T]) At(index int) (T, error) {
 	}
 }
 
+// SetAt() sets newValue at index, and returns the old value.
 func (v *Vector[T]) SetAt(index int, newValue T) (T, error) {
 	switch v.layout {
 	case orientation.MxOne:
@@ -61,6 +67,7 @@ func (v *Vector[T]) SetAt(index int, newValue T) (T, error) {
 	}
 }
 
+// Rank() returns the rank of V.
 func (v *Vector[T]) Rank() int {
 	m, n := v.data.Rank()
 	switch v.layout {
@@ -73,6 +80,7 @@ func (v *Vector[T]) Rank() int {
 	}
 }
 
+// String() returns the components as a string.
 func (v *Vector[T]) String() string {
 	var sb strings.Builder
 	sb.WriteString(v.data.String())
@@ -80,6 +88,7 @@ func (v *Vector[T]) String() string {
 	return sb.String()
 }
 
+// Equal() checks if V and A are equal.
 func (v *Vector[T]) Equal(a *Vector[T]) bool {
 	if v.Rank() != a.Rank() {
 		return false
@@ -95,6 +104,7 @@ func (v *Vector[T]) Equal(a *Vector[T]) bool {
 	return true
 }
 
+// EqualReal() is a little bit strickter than Equal().
 func (v *Vector[T]) EqualReal(a *Vector[T]) bool {
 	if v.layout != a.layout {
 		return false
@@ -102,6 +112,7 @@ func (v *Vector[T]) EqualReal(a *Vector[T]) bool {
 	return v.Equal(a)
 }
 
+// Values() returns all the elements as a slice of T.
 func (v *Vector[T]) Values() ([]T, error) {
 	switch v.layout {
 	case orientation.MxOne:
@@ -121,6 +132,7 @@ func (v *Vector[T]) Values() ([]T, error) {
 	}
 }
 
+// Addition() returns A+B.
 func Addition[T computation.Numeric](a, b *Vector[T]) (*Vector[T], error) {
 	c, err := container.Addition(a.data, b.data)
 	if err != nil {
@@ -132,6 +144,7 @@ func Addition[T computation.Numeric](a, b *Vector[T]) (*Vector[T], error) {
 	}, nil
 }
 
+// Transposition() returns A^T.
 func Transposition[T computation.Numeric](a *Vector[T]) (*Vector[T], error) {
 	c, err := container.Transposition(a.data)
 	if err != nil {
@@ -143,6 +156,7 @@ func Transposition[T computation.Numeric](a *Vector[T]) (*Vector[T], error) {
 	}, nil
 }
 
+// ScalarMultiplication() returns s*A.
 func ScalarMultiplication[T computation.Numeric](s T, a *Vector[T]) (*Vector[T], error) {
 	c, err := container.ScalarMatrixMultiplication(s, a.data)
 	if err != nil {
