@@ -21,6 +21,7 @@ func New[T computation.Numeric](m, n int, values ...T) (*Matrix[T], error) {
 	}, nil
 }
 
+// String() returns the matrix as an string.
 func (m *Matrix[T]) String() string {
 	return m.data.String()
 }
