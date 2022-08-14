@@ -60,11 +60,11 @@ func TestNewScaling(t *testing.T) {
 }
 
 var (
-	theta30 = dxr.NewDedrees(30)
+	theta30d = dxr.NewDedrees(30)
 )
 
 func TestNewRotationZ(t *testing.T) {
-	mhs, err := NewRotationZ(theta30)
+	mhs, err := NewRotationZ(theta30d)
 	if err != nil {
 		t.Fatalf("NewRotationZ() failed with: %s", err)
 	}
@@ -73,7 +73,7 @@ func TestNewRotationZ(t *testing.T) {
 }
 
 func TestNewRotationX(t *testing.T) {
-	mhs, err := NewRotationX(theta30)
+	mhs, err := NewRotationX(theta30d)
 	if err != nil {
 		t.Fatalf("NewRotationX() failed with: %s", err)
 	}
@@ -82,7 +82,7 @@ func TestNewRotationX(t *testing.T) {
 }
 
 func TestNewRotationY(t *testing.T) {
-	mhs, err := NewRotationY(theta30)
+	mhs, err := NewRotationY(theta30d)
 	if err != nil {
 		t.Fatalf("NewRotationY() failed with: %s", err)
 	}
