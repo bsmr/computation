@@ -3,6 +3,7 @@ package hc
 import (
 	"testing"
 
+	"github.com/bsmr/computation/dxr"
 	"github.com/bsmr/computation/internal/container"
 )
 
@@ -58,9 +59,12 @@ func TestNewScaling(t *testing.T) {
 	t.Logf("\nmhs: %s", mhs)
 }
 
+var (
+	theta30 = dxr.NewDedrees(30)
+)
+
 func TestNewRotationZ(t *testing.T) {
-	theta := D2R(30)
-	mhs, err := NewRotationZ(theta)
+	mhs, err := NewRotationZ(theta30)
 	if err != nil {
 		t.Fatalf("NewRotationZ() failed with: %s", err)
 	}
@@ -69,8 +73,7 @@ func TestNewRotationZ(t *testing.T) {
 }
 
 func TestNewRotationX(t *testing.T) {
-	theta := D2R(30)
-	mhs, err := NewRotationX(theta)
+	mhs, err := NewRotationX(theta30)
 	if err != nil {
 		t.Fatalf("NewRotationX() failed with: %s", err)
 	}
@@ -79,21 +82,10 @@ func TestNewRotationX(t *testing.T) {
 }
 
 func TestNewRotationY(t *testing.T) {
-	theta := D2R(30)
-	mhs, err := NewRotationY(theta)
+	mhs, err := NewRotationY(theta30)
 	if err != nil {
 		t.Fatalf("NewRotationY() failed with: %s", err)
 	}
 
 	t.Logf("\nmhs: %s", mhs)
-}
-
-func TestConversions(t *testing.T) {
-	d0 := 30.0
-	r1 := D2R(d0)
-	d2 := R2D(r1)
-
-	t.Logf("d0: %v", d0)
-	t.Logf("r1: %v", r1)
-	t.Logf("d2: %v", d2)
 }
